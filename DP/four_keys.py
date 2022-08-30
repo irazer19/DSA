@@ -1,5 +1,4 @@
-def four_keys(n):
-    """
+"""
     Imagine you have a special keyboard with the following keys:
 Key 1:  Prints 'A' on screen
 Key 2: (Ctrl-A): Select screen
@@ -12,7 +11,11 @@ keys), write a program to produce maximum numbers of A's. That is to
 say, the input parameter is N (No. of keys that you can press), the
 output is number of A's that you can produce
 
-    """
+"""
+
+
+def four_keys(n):
+    # Time: O(n^2) and Space: O(n)
     # For all the inputs <= 6, the total prints is the number itself.
     if n <= 6:
         return 6
