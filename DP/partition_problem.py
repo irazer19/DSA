@@ -6,6 +6,7 @@ partitioned into two subsets such that the sum of elements in both subsets is eq
 
 def partition(arr):
     # Time = Space = O(n x m), n = array length and m = total / 2
+    # This problem is same as Subset Sum problem, where n is already given.
     # Since we have to divide the array into two subsets having equal sum, we will first calculate the total sum.
     total = sum(arr)
     # Now if the total sum is an Odd number then we cannot equally divide it into two subsets.
