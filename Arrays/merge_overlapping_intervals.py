@@ -12,37 +12,29 @@ def mergeOverlappingIntervals(intervals):
     # Time: O(nlogn) and Space: O(n)
     """
     Logic:
-    First we sort the intervals by start time. Then for each interval, we will compare it with i+1 intervals until
-    they can be merged. Once the current and next intervals cannot be merged, we will store the current interval
-    to the result and move to the next interval.
+    First we sort the intervals by start time. Then for each interval, we will compare it with the previous
+    result interval, if its can be merged, then we merge and update the previous result interval, else
+    add the current interval to the result.
     """
     # Sorting the intervals by start time.
     intervals = sorted(intervals, key=lambda x: x[0])
-    # Storing the result
-    result = []
-    # Starting index
-    currIdx = 0
-    # Until we have finished all the intervals
-    # We skip the last interval because it does not have any interval next to it for comparison.
-    while currIdx < len(intervals) - 1:
-        # Storing the current interval in this variable
-        currInterval = [intervals[currIdx][0], intervals[currIdx][1]]
-        # We start comparing the current interval with the next interval
-        currIdx = currIdx + 1
-        # Until the next interval is valid, and the end time of current interval is greater or equal to the
-        # start time of the next interval
-        while currIdx < len(intervals) and currInterval[1] >= intervals[currIdx][0]:
-            # Since we have sorted it by start time, the start time will remain the same
-            currInterval[0] = currInterval[0]
-            # The end time will be updated which is the max of either the current interval or the next interval's
-            # end time.
-            currInterval[1] = max(currInterval[1], intervals[currIdx][1])
-            # Moving to the next interval.
-            currIdx += 1
-        # Storing the current interval to the result
-        result.append(currInterval)
-    # Finally, once we are out of the loop, if the idx is still pointing to the next interval, we append it
-    # to the result.
-    if currIdx == len(intervals) - 1:
-        result.append(intervals[currIdx])
+    # Storing the result, since we compare with the previous result interval, we add the first element to the result.
+    result = [intervals[0]]
+    for i in range(1, len(intervals)):
+        # Getting the current interval
+        currInterval = intervals[i]
+        # Getting the previous result interval
+        prevInterval = result[-1]
+        # Getting start and end time of each interval
+        currStart, currEnd = currInterval
+        prevStart, prevEnd = prevInterval
+        # If the previous result interval's end time > current intervals start time, they are overlapping.
+        if prevEnd >= currStart:
+            # New merged interval
+            newInterval = [prevStart, max(prevEnd, currEnd)]
+            # Updating the previous result interval
+            result[-1] = newInterval
+        else:
+            # If no overlapping, then we just add the current interval to the result
+            result.append(currInterval)
     return result
