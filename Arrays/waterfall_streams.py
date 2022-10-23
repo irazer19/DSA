@@ -21,6 +21,18 @@ source (in the first row of the array) will always be empty, allowing the water 
 Write a function that returns the percentage of water inside each of the bottom buckets after the water has flowed
 through the entire structure.
 
+array = [
+    [0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 0, 0, 1, 0],
+    [0, 0, 0, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0, 0, 0],
+]
+source = 3
+expected = [0, 0, 0, 25, 25, 0, 0]
+
 """
 
 
