@@ -14,6 +14,9 @@ def subarraySum(nums, k) -> int:
 	We will loop over every number and add it the current sum, if the currentSum - target which is the remainder
 	present in the hashtable, then we will add the result by adding the frequency of the remainder, meaning that
 	if we have r remainders then we know that there are r subarrays which can add upto the target.
+
+	NOTE: If the question is asking to find the subarrays which are divided by the k, then we store the
+	remainder = currSum % k in the hash table.
 	"""
 	# Current sum
 	currSum = 0
