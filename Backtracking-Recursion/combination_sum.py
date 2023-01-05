@@ -14,13 +14,14 @@ These are the only two combinations.
 
 
 def combinationSum(candidates, target: int):
-	# Time: O(n!) and Space: O(n)
+	# Time: O(2^n) and Space: O(n)
 	"""
 	Logic:
 	The problem with doing recursion with all the numbers in every function call is that we will have duplicate
 	results, ex: [2, 2, 3] and [2, 3, 2], but we want a combination where the order should not matter.
-	So to avoid this issue, we will do recursion only from the current index onwards and not starting from 0th index
-	of the array.
+	So to avoid this issue, we will add the current index element to the stack and make a call again starting from
+	the same index, after the call is returned, we will pop that element and then again make a call to the next index
+	without adding the current element.
 	"""
 	# Storing the results
 	result = []
@@ -30,19 +31,18 @@ def combinationSum(candidates, target: int):
 	return result
 
 
-def findComb(candidates, stack, result, startIdx, remainingSum):
-	# If the remaining sum is less than 0, then we return
-	if remainingSum < 0:
+def findComb(candidates, stack, result, startIdx, remainder):
+	# Edge case
+	if remainder < 0 or startIdx == len(candidates):
 		return
-	# If the remaining sum is equal then we add the result
-	if remainingSum == 0:
+	# Base case
+	if remainder == 0:
 		result.append(stack[:])
 		return
-	# Making a call with all the numbers from index startIdx to the length of the array
-	for i in range(startIdx, len(candidates)):
-		# Appending the number to the stack, and making the call
-		stack.append(candidates[i])
-		# We subtract the current number from the remaining sum for the next call.
-		findComb(candidates, stack, result, i, remainingSum - candidates[i])
-		# Pop the added number, and move to the next number.
-		stack.pop()
+	# Adding the current element to the stack
+	stack.append(candidates[startIdx])
+	# Calling the function starting from the same index since we can use the same number unlimited times.
+	findComb(candidates, stack, result, startIdx, remainder - candidates[startIdx])
+	stack.pop()
+	# Calling the function without the current element.
+	findComb(candidates, stack, result, startIdx + 1, remainder)
