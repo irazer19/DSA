@@ -23,49 +23,47 @@ Output: [1,3,2]
 
 
 def findNext(nums):
-	# Time: O(n) and Space: O(1)
-	"""
-	Logic:
-	Step 1: First we find the digit which is smaller than the immediate next digit.
-	Step 2: Now we find the largest index digit which is immediate greater than the above found digit.
-	Step 3: We swap the above two digits.
-	Step 4: Now we reverse from everything from the swapped idx onwards.
-	"""
+    # Time: O(n) and Space: O(1)
+    """
+    Logic:
+    Step 1: First we find the digit which is smaller than the immediate next digit.
+    Step 2: Now we find the largest index digit which is immediate greater than the above found digit.
+    Step 3: We swap the above two digits.
+    Step 4: Now we reverse from everything from the swapped idx onwards.
+    """
+    n = len(nums)
+    k = -1
 
-	# Finding the digit whose immediate next digit is greater.
-	leftIdxToSwap = -1
-	i = len(nums) - 1
-	while i > 0:
-		if nums[i - 1] < nums[i]:
-			leftIdxToSwap = i - 1
-			break
-		i -= 1
+    # Step 1: Find the pivot
+    for i in range(n - 1, 0, -1):
+        if nums[i - 1] < nums[i]:
+            k = i - 1
+            break
 
-	# If there was no such index, then we simply reverse the nums, ex: [3, 2, 1], the next permutation is [1, 2, 3]
-	if leftIdxToSwap == -1:
-		reverse(nums, 0, len(nums) - 1)
-	else:
-		# We want to find the digit which is greater than leftIdxToSwap, and is smallest among all the compared
-		# elements, we want to maximize this index so that the we do the swap with the smallest rightmost element.
-		# By default, the current next element is greater.
-		rightIdxToSwap = leftIdxToSwap + 1
-		# We start comparing all the next values
-		for i in range(rightIdxToSwap + 1, len(nums)):
-			# If the current value is greater than the leftIdxToSwap element, and its greater than or equal to
-			# the current rightIdxToSwap element, we update the rightIdxToSwap.
-			if nums[i] > nums[leftIdxToSwap] and nums[rightIdxToSwap] >= nums[i]:
-				rightIdxToSwap = i
-		# Once we have the correct rightIdxToSwap, we do the swap.
-		nums[rightIdxToSwap], nums[leftIdxToSwap] = nums[leftIdxToSwap], nums[rightIdxToSwap]
-		# Finally, we reverse the last elements starting from the next index of leftIdxToSwap.
-		reverse(nums, leftIdxToSwap + 1, len(nums) - 1)
+    # If the sequence is already the highest permutation, reverse it to get the lowest permutation
+    if k == -1:
+        nums.reverse()
+        return nums
+
+    # Step 2: Find the first element greater than the pivot
+    l = n - 1
+    while nums[l] <= nums[k]:
+        l -= 1
+
+    # Step 3: Swap the pivot and the element found in step 2
+    nums[k], nums[l] = nums[l], nums[k]
+
+    # Step 4: Reverse the subsequence from the pivot to the end
+    # We reverse because after swapping, the values from pivot to end are in descending order, try it with an example
+    nums[k + 1 :] = reversed(nums[k + 1 :])
+    return nums
 
 
 def reverse(nums, start, end):
-	while start < end:
-		nums[start], nums[end] = nums[end], nums[start]
-		start += 1
-		end -= 1
+    while start < end:
+        nums[start], nums[end] = nums[end], nums[start]
+        start += 1
+        end -= 1
 
 
 print(findNext([1, 2, 3]))
