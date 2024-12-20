@@ -19,6 +19,8 @@ Input: n = 4
 Output: 7
 Explanation: 7 = 4 * 3 / 2 + 1
 
+https://leetcode.com/problems/clumsy-factorial/
+
 """
 
 
