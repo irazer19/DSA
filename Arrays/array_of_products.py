@@ -5,12 +5,18 @@ element in the output array is equal to the product of every other number in the
 Input: = [5, 1, 4, 2]
 Output: [8, 40, 10, 20]
 
+https://leetcode.com/problems/product-of-array-except-self/description/
+
 """
 
 
-def arrayOfProducts(array):
+def array_of_products(array):
     # Time = Space = O(n)
     """
+    Brute force:
+    The brute force approach would use nested loops to calculate the product of all numbers except the current number.
+    Time: O(n^2) and Space: O(1)
+
     Logic:
     First we will traverse the array and collect all the product of all the left elements of every element in the array.
     Again we will traverse the array and collect all the right product of every element in the array.
