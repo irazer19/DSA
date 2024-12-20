@@ -23,64 +23,33 @@ Explanation: 7 = 4 * 3 / 2 + 1
 
 
 def clumsy(n: int) -> int:
-    # Time: O(n) and Space: O(1)
     """
-    We will rotate the operator by using modulus %, as we increment the index to the next operator.
-    Now in this question, a * is followed by /, so whenever we get *, we will compute the full a * b / c value,
-    so that we get the correct mathematical result, and then prev = a * b / c.
-    Rest of the operators, +,-, we will simply keep adding/subtract from the result as we move.
+    Using a stack-based approach.
+    The code uses a stack to calculate expressions like "10 * 9 / 8 + 7 - 6 * 5 / 4 + 3 - 2 * 1" by rotating through
+    4 operations (multiply, divide, add, subtract). When we hit multiply/divide, we operate on the top of stack;
+    for add/subtract, we push numbers (negative for subtraction). Finally, we sum up the stack to get the result.
 
+    Time = Space = O(n)
     """
-    # Edge case, as we start by computing the result for the first 3 elements: a * b / c
-    if n == 3:
-        return 6
-    if n == 2:
-        return 2
-    if n == 1:
-        return 1
-    # First 3 elements result
-    result = int(n * (n - 1) / (n - 2))
-    # Previous computed result
-    prev = int(n * (n - 1) / (n - 2))
-    # Operators which we will rotate using %
-    op = ["*", "/", "+", "-"]
-    # Starting operator
-    op_idx = 2
-    # start from the 4h element
-    num = n - 3
-    while num > 0:
-        # Getting the operator
-        op_idx = op_idx % len(op)
-        # If its *, then we will try to compute all three elements including / division
-        if op[op_idx] == "*":
-            # If this is not the last element
-            if num - 1 > 0:
-                # subtract the prev result
-                result -= prev
-                # Now compute the all 3 element result
-                result += int(prev * num / (num - 1))
-                # Make it as prev
-                prev = int(prev * num / (num - 1))
-                # Move two elements ahead, as we also used / with the next element
-                num -= 2
-                # Move two operators ahead as we also used /
-                op_idx += 2
-            else:
-                # Else we will only use *, and do the basic computation
-                result -= prev
-                result += prev * num
-                prev = prev * num
-                num -= 1
-                op_idx += 1
-        elif op[op_idx] == "+":
-            result += num
-            prev = num
-            op_idx += 1
-            num -= 1
-        elif op[op_idx] == "-":
-            result -= num
-            # Remember: for negative -, we will store the prev = -num
-            prev = -num
-            op_idx += 1
-            num -= 1
-    return result
+    # Stack to store intermediate results
+    stack = [n]
+    n -= 1
+    index = 0
+
+    # Process each number with the rotating operations
+    while n > 0:
+        # Get current operation based on index
+        if index % 4 == 0:  # Multiply
+            stack.append(stack.pop() * n)
+        elif index % 4 == 1:  # Divide
+            stack.append(int(stack.pop() / n))  # Use int for floor division
+        elif index % 4 == 2:  # Add
+            stack.append(n)
+        else:  # Subtract
+            stack.append(-n)
+
+        n -= 1
+        index += 1
+
+    # Sum up all values in the stack
+    return sum(stack)
