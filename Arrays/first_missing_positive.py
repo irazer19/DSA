@@ -5,6 +5,8 @@ You must implement an algorithm that runs in O(n) time and uses constant extra s
 Input: nums = [3,4,-1,1]
 Output: 2
 Explanation: 1 is in the array but 2 is missing.
+
+https://leetcode.com/problems/first-missing-positive/description/
 """
 
 

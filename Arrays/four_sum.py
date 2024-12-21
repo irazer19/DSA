@@ -6,18 +6,23 @@ of all these quadruplets in no particular order.
 array= [7, 6, 4, -1, 1, 2], target=16
 quadruplets = [[7, 6, 4, -1], [7, 6, 1, 2]]
 
+https://leetcode.com/problems/4sum/description/
 """
 
 
 def fourNumberSum(array, targetSum):
-    # Time = Space = O(n^2)
     """
-    Logic:
+    Brute Force:
+    Use 4 nested loops to find all the quadruplets.
+    Time: O(n^4) and Space: O(1)
+
+    Optimized:
     AS we iterate, we will first get the sum of i and i+1 elements and check whether the remaining sum
     target-currSum exists in the dictionary, if yes then we will add it to the result, else move to the next element.
     After we have exhausted all the elements till n, next we will take the sum of i and all its previous elements
     till 0th index and store the sum in the dictionary.
 
+    Time: O(n^2) and Space: O(n^2) because we are storing pairs.
     """
     # Dictionary to store the sum of two elements.
     sumStore = {}
