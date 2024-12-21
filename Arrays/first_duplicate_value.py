@@ -9,13 +9,16 @@ Output: 2
 
 
 def firstDuplicateValue(array):
-    # Time: O(n) and Space: O(1)
     """
-    Logic:
+    Brute Force: Maintain a seen set, and check if the element is already in the set.
+    Time: O(n) and Space: O(n)
+
+    Optimized:
     Since all the integers in the array are positive, and between 1 and n, inclusive.
     As we iterate, we will mark the (current element value - 1) index of the array as negative.
     This way, if we ever encounter an element with index (value - 1) which is already negative,
     we will return that element.
+    Time: O(n) and Space: O(1)
     """
     # For every element.
     for i in range(len(array)):
