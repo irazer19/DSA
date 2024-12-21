@@ -13,58 +13,47 @@ Example 2:
 Input: arr = [1,2,3,4,5], k = 4, x = -1
 Output: [1,2,3,4]
 
+https://leetcode.com/problems/find-k-closest-elements/
+
 """
 
 
-def find_closest_elements(arr, k, x):
-    # Time: O(nlogn) and Space: O(n)
+def findClosestElements(arr, k, x):
     """
-    We have four cases:
-    1. x is not present in the list and is smaller than the first element in arr
-    2. x is not present in the list and is greater than the last element in arr
-    3. x is not present in the list and lies between the first and the last element of the arr.
-    4. x is present in the list.
+    Brute Force:
+    For each number in the array:
+    1. Calculate its distance from x
+    2. Store both the distance and the original number as a tuple
+    3. Sort the tuples based on the distance
+    4. Return the first k elements in sorted order.
+    Time: O(nlogn) and Space: O(n)
+
+    Optimized:
+    The key intuition is that we're sliding a window of size k through the array and using binary search to efficiently
+    find the best position where the elements in the window have the closest distance to the target x.
+
+    Time: O(logn) and Space: O(1)
     """
+    if k >= len(arr):
+        return arr
 
-    # Case 1
-    if x < arr[0]:
-        return arr[:k]
-    # Case 2
-    if x > arr[-1]:
-        return arr[-k:]
+    # Initialize left and right pointers for binary search
+    # Right pointer is len(arr)-k because we need k elements if we assume the mid to be the start of the window
+    left = 0
+    right = len(arr) - k
 
-    # Case 3 and 4
-    # We try to find the closest index to x in the arr if x lies between the arr elements, irrespective of whether
-    # it is present or not.
-    x_idx = -1
-    if arr[0] <= x <= arr[-1]:
-        curr_abs_val = float("inf")
-        for i in range(len(arr)):
-            # We check the absolute difference
-            if abs(arr[i] - x) < curr_abs_val:
-                x_idx = i
-                curr_abs_val = abs(arr[i] - x)
-
-    # We store the closest element found
-    res = [arr[x_idx]]
-    # Now we take two pointers, one to the left and other to the right of the closest element, and start comparing them
-    left_idx = x_idx - 1
-    right_idx = x_idx + 1
-
-    while left_idx >= 0 or right_idx < len(arr):
-        # Check of result condition
-        if len(res) == k:
-            break
-        # Getting the left val
-        left_val = arr[left_idx] if left_idx >= 0 else float("inf")
-        # getting the right val
-        right_val = arr[right_idx] if right_idx < len(arr) else float("inf")
-        # Comparing the val and adding the smallest
-        if abs(left_val - x) <= abs(right_val - x):
-            res.append(left_val)
-            left_idx -= 1
+    # Binary search to find the starting position of k elements
+    while left < right:
+        mid = (left + right) // 2
+        # Lets assume that the mid element is the start of the window, and the next k elements are the part of the result, where
+        # the last element in the mid + k if the last element of the window.
+        # Now if the first element of the window is > the last element of the window then we know we can move the windo
+        # to the right since the absolute distance is less towards the right.
+        # If x-arr[mid] > arr[mid+k]-x, we should move window to right
+        if abs(x - arr[mid]) > abs(arr[mid + k] - x):
+            left = mid + 1
         else:
-            res.append(right_val)
-            right_idx += 1
-    # returning the sorted result
-    return sorted(res)
+            right = mid
+
+    # Return k elements starting from the found start position
+    return arr[left : left + k]
