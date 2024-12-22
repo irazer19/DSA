@@ -5,6 +5,7 @@ is equal to the value at that index. Your function should return the minimum ind
 array = [-5, -3, 0, 3, 4, 5, 9]
 expected = 3
 
+Similar: https://leetcode.com/problems/fixed-point/description/
 """
 
 
