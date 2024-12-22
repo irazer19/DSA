@@ -17,50 +17,43 @@ Travel to station 1. Your tank = 7 - 3 + 2 = 6
 Travel to station 2. Your tank = 6 - 4 + 3 = 5
 Travel to station 3. The cost is 5. Your gas is just enough to travel back to station 3.
 Therefore, return 3 as the starting index.
+
+https://leetcode.com/problems/gas-station/description/
 """
 
 
 def canCompleteCircuit(gas, cost):
-    # Time: O(n) and Space: O(1)
     """
-    Logic:
+    Brute force:
+    For every station, we will go around the full circuit once to check if we can reach it. This takes two for loops.
+    Time: O(n^2) and Space: O(1)
+
+
+    Optimized:
     Edge case: If the total gas that we have is less than the total required gas to reach the stations then
     we return -1 because we dont have a solution.
-    At each station, we will compute the difference,
-    gas left = current gas - gas which will be consumed for next station.
-    If the sum of total left gas + diff is -ve, then we know that we cannot each the next station, so
-    whatever starting index we had earlier is invalid, and thus we reset total gas left = 0, and update the
-    potential starting index as the next station.
 
-    Else, if the sum of total left gas + diff > 0, then we know that we can still reach the next station,
-    So we keep moving.
+    We will iterate over the gas array, and keep track of the total gas we have, and the gas required to reach the next
+    station. If we are short on gas, we restart (totalGas = 0) and assume the next station could be the answer.
 
-    Idea: The first station using which we can reach the end of the array without the gas going -ve is the correct
-    starting station.
+    Time: O(n) and Space: O(1)
     """
     # Edge case, if the consumption is greater than input gas, then we return -1
     if sum(gas) < sum(cost):
         return -1
-    # This variable will track the total gas left from the previous station, as we move forward from a
-    # starting station.
+    # The total gas we currently have.
     totalGas = 0
-    # Result
     startStation = 0
     # For each station.
     for i in range(len(gas)):
-        # We will compute the difference between input gas - consumed gas.
-        diff = gas[i] - cost[i]
-        # If the sum of previous total gas + diff > 0
-        if totalGas + diff < 0:
-            # We reset the total gas to 0 because the previous starting station is invalid as we cannot reach
-            # the next station.
-            totalGas = 0
-            # We make the potential starting station = next station.
+        totalGas += gas[i]  # Recharge gas
+        needed = cost[i]  # To reach the next station
+        # If we are short on fuel, we restart and assume the next station could be the answer
+        # therefore, totalGas = 0
+        if totalGas < needed:
             startStation = i + 1
-        else:
-            # Else, if the sum above is position then we can definitely reach the next station, so we add
-            # the left over gas to the current total gas.
-            totalGas += diff
-
+            totalGas = 0
+        else:  # Else we subtract the used gas
+            totalGas -= needed
     # Result
     return startStation
