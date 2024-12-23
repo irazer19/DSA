@@ -4,16 +4,21 @@ Write a function that takes in an array of integers and returns the length of th
 array = [1, 2, 3, 3, 4, 0, 10, 6, 5, -1, -3, 2, 3]
 OutPut: 6
 
+https://leetcode.com/problems/longest-mountain-in-array/description/
 """
 
 
 def longestPeakInArray(array):
-    # Time: O(n) and Space: O(1)
     """
+    Brute Force:
+    Generate all substring and then check if it is a peak.
+    Time: O(n^3) and Space: O(1)
+
     Logic:
     As we iterate over the array, we will check whether the current element is a peak.
     If yes, then we will expand to the left and right and calculate the peak size and update the result.
     If no, then we will move to the next element.
+    Time: O(n) and Space: O(1)
     """
     # Stores the result
     longestPeak = 0
