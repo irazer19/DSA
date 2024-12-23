@@ -3,54 +3,51 @@ Write a function that takes in an array of integers and returns an array of leng
 range of integers contained in that array.
 
 array = [1, 11, 3, 0, 15, 5, 2, 4, 10, 7, 12, 6]
-output: [0, 7]
+output: [0, 7] Where 0 is the smallest element & 7 is the largest element of the consecutive series.
 
+Similar: https://leetcode.com/problems/longest-consecutive-sequence/description/
 """
 
 
 def largestRange(array):
-    # Time = Space = O(n)
     """
-    Logic:
-    For quick access, we will store all the numbers in a dictionary.
-    Now for each element, we will consecutively expand to its left and right until the numbers are present in the
-    array. After expanding to both the sides, if the current total length is greater than the existing length,
-    then we will update it and also update the result range.
-    As we visit the numbers, we will mark it as False because we had already computed the max range using it.
+    Brute Force:
+    For each element, we check the left and the right to find its range, so it's like using two for-loops.
+    Time: O(n^2) and Space:O(n)
+
+    Optimized:
+    Key-intuition: Only numbers that don't have a left neighbor (num-1) in the set can be the start of the longest sequence.
+    This means if we see 4 and we know 3 exists in our set, we can skip checking sequences starting at 4.
+    That's why the check if num - 1 not in nums is crucial - it ensures we only explore sequences from their true starting points,
+    making the solution much more efficient than checking every number as a potential start.
+    Time = Space = O(n)
     """
-    # Storing the numbers in the dictionary
-    nums = {n: True for n in array}
-    # To store the largest range.
-    result = []
-    largestLength = 0
 
-    # For each element
-    for n in array:
-        # If the number is already visited, we'll move to next.
-        if not nums[n]:
-            continue
-        # Mark it as visited
-        nums[n] = False
-        # Starting length of the range with just 1 element
-        currLength = 1
-        # Left and right values for expanding from the current position.
-        leftVal = n - 1
-        rightVal = n + 1
-        # Expanding left and right
-        while leftVal in nums:
-            nums[leftVal] = False
-            # Increasing the length
-            currLength += 1
-            leftVal -= 1
-        # Expanding right
-        while rightVal in nums:
-            nums[rightVal] = False
-            currLength += 1
-            rightVal += 1
-        # If the current length is greater than the largestLength, we will update it.
-        if currLength > largestLength:
-            largestLength = currLength
-            # Updating the range
-            result = [leftVal + 1, rightVal - 1]
+    if not array:
+        return []
 
-    return result
+    # Create hash set for O(1) lookups
+    nums = set(array)
+    best_range = []
+    longest_length = 0
+
+    # Check each possible start of a sequence
+    for num in array:
+        # Only check numbers that could be start of a sequence
+        # If num-1 exists, num can't be start of longest sequence
+        if num - 1 not in nums:
+            # Find consecutive chain
+            current_num = num
+            current_length = 1
+
+            # Keep going until chain breaks
+            while current_num + 1 in nums:
+                current_num += 1
+                current_length += 1
+
+            # Update longest range if current is longer
+            if current_length > longest_length:
+                longest_length = current_length
+                best_range = [num, current_num]
+
+    return best_range
