@@ -4,58 +4,66 @@ length of the longest balanced substring with regard to parentheses.
 
 string = "(()))("
 expected = 4
+
+https://leetcode.com/problems/longest-valid-parentheses/description/
 """
 
 
+# Brute Force Solution
+def BruteForce(s: str) -> int:
+    """
+    Time Complexity: O(n³) - We check all possible substrings of even length and validate each one
+    Space Complexity: O(n) - For the stack in isValid function
+    """
+
+    def isValid(substring: str) -> bool:
+        stack = []
+        for char in substring:
+            if char == "(":
+                stack.append(char)
+            else:  # char is ')'
+                if not stack:  # no matching '(' found
+                    return False
+                stack.pop()
+        return len(stack) == 0
+
+    n = len(s)
+    max_length = 0
+
+    # Try all possible substrings
+    for i in range(n):
+        for j in range(
+            i + 2, n + 1, 2
+        ):  # j+2 because valid strings must have even length
+            if isValid(s[i:j]):
+                max_length = max(max_length, j - i)
+
+    return max_length
+
+
 def longestBalancedSubstring(string):
-	# Time: O(n) and Space: O(1)
-	"""
-	Logic:
-	We will move from left to right, now as we move, we will count the opening and closing brackets.
-	If at any moment, # of opening == # of closing, then we will update the max result.
-	Else, if closing > opening, then we reset the opening = closing = 0, because the parentheses become invalid at this
-	point.
+    """
+    Optimized:
+    1. We use a stack to keep track of indices of '(' characters and the last invalid position
+    2. When we see a '(':
+                            i. Push its index onto the stack
+    3. When we see a ')':
+                            i. Pop from the stack (removing the matching '(' index)
+                            ii. If stack becomes empty, push current index (new base)
+                            iii. If stack not empty, calculate length between current index and last index on stack
+    Time = Space = O(n)
+    """
+    stack = [-1]  # Initialize with -1 as base index
+    max_length = 0
 
-	Now we repeat the same above process by moving from right to left, we do it so that we can cover the edge
-	case where # of opening > # of closing, in that case the above left to right will never catch the result.
-	"""
-	# We will return the max of whichever is greater, which is, from left to right, or from right to left.
-	return max(getLongestInDirection(string, True), getLongestInDirection(string, False))
+    for i in range(len(string)):
+        if string[i] == "(":
+            stack.append(i)
+        else:  # if s[i] == ')'
+            stack.pop()
+            if not stack:
+                stack.append(i)
+            else:
+                max_length = max(max_length, i - stack[-1])
 
-
-def getLongestInDirection(string, leftToRight):
-	# Initializing opening and closing counters.
-	opening = 0
-	closing = 0
-	# Result
-	currMax = 0
-	# Initializing the start and end index for traversing for either left or right direction
-	start = 0 if leftToRight else len(string) - 1
-	end = len(string) if leftToRight else -1
-	step = 1 if leftToRight else -1
-
-	for idx in range(start, end, step):
-		# If we are moving from left to right,
-		if leftToRight:
-			# If the char is open
-			if string[idx] == '(':
-				opening += 1
-			else:
-				# Else for closing string.
-				closing += 1
-		else:
-			# If we are moving from right to left, out open string is ')'
-			# And the closing char becomes '('
-			if string[idx] == ')':
-				opening += 1
-			else:
-				closing += 1
-		# If the opening == closing, then we have a balanced brackets so we update the result.
-		if opening == closing:
-			currMax = max(currMax, opening + closing)
-		# If the closing > opening, then we will reset the counters
-		if closing > opening:
-			opening = 0
-			closing = 0
-	# Returning the longest balanced substring.
-	return currMax
+    return max_length
