@@ -8,48 +8,41 @@ Output: 4
 Explanation: Replace the one 'A' in the middle with 'B' and form "AABBBBA".
 The substring "BBBB" has the longest repeating letters, which is 4.
 
+https://leetcode.com/problems/longest-repeating-character-replacement/description/
+
+Brute Force:
+The key idea would be to try every possible substring and check if it can be made valid with k changes.
+Time: O(n^3): n^2 to generate all the substrings, and n to check.
+Space: O(1)
+
+Optimized:
+The key insight is that we don't need to actually perform the character replacements - we just need to know if
+they're possible within our k limit. This is done by tracking the most frequent character in our current window.
+Time: O(n): because the right pointer moves n times, and the left pointer at max moves n times = O(2n) = O(n)
+and Space: O(1)
 """
 
 
 def characterReplacement(s, k):
-	# Time = Space = O(n)
-	"""
-	Logic:
-	We will use sliding window here. As we iterate we will track the frequency of each letter.
-	At every iteration, we will get the max frequency found so far and subtract it from the current window size to get
-	the replaceable elements, the total number of replaceable elements must be <= k according to the question.
-	If we see that the number of replaceable elements is > k, then we will decrease the window size by incrementing
-	the start index
-	"""
-	# Frequency count table
-	freq = {c: 0 for c in s}
-	# Result
-	result = 1
-	# Start window index
-	start = 0
-	# End window index
-	end = 0
-	# Moving the window size
-	while end < len(s):
-		# Increasing the frequency count for the current letter
-		freq[s[end]] += 1
-		# Get the largest frequency in this window
-		largestFreq = max(list(freq.values()))
-		# Computing the total elements which need to be replaced
-		toReplace = end - start + 1 - largestFreq
-		# If the total replaceable elements is within k, then we compute the result
-		if toReplace <= k:
-			# The result is the entire current window since we can replace all the chars.
-			result = max(result, end - start + 1)
-			# Increasing the window size
-			end += 1
-		else:
-			# Else, if we will decrease the window size and also remove the elements frequency which is at the
-			# start index of the window.
-			freq[s[start]] -= 1
-			start += 1
-			# Here we decrease the frequency of the current end window element because in the next loop we will
-			# again encounter this element as we are not increasing the end pointer.
-			freq[s[end]] -= 1
+    # Initialize character count dictionary
+    count = {}
+    max_length = 0
+    max_count = 0  # Count of most frequent character in current window
+    left = 0
 
-	return result
+    # Iterate through the string with right pointer
+    for right in range(len(s)):
+        # Add new character to count
+        count[s[right]] = count.get(s[right], 0) + 1
+        # Update max_count for current window
+        max_count = max(max_count, count[s[right]])
+
+        # Current window size - count of most frequent char = chars to change
+        # If this is greater than k, shrink window
+        while (right - left + 1) - max_count > k:
+            count[s[left]] -= 1
+            left += 1
+
+        max_length = max(max_length, right - left + 1)
+
+    return max_length
