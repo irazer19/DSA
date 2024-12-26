@@ -23,6 +23,8 @@ Return the minimum among all paths
 We can do this using backtracking - at each step, try all possible adjacent swaps and keep track of number of moves.
 Since each position has a choice to swap with its next position, it's essentially generating all permutations that can
 be reached through adjacent swaps.
+Time: O(n! * n), because we are doing permutation.
+Space: O(n), for the recursion stack
 
 Optimized:
 "For each pair of positions (left and right), find the matching character from either direction (right->left or left->right)
@@ -32,6 +34,8 @@ The solution works because it's a greedy approach:
 1. When we find an unmatched pair, we look for a match from both directions
 2. We implicitly choose the shorter path by trying right side first, then left side
 3. Variable moves simply accumulates the number of swaps needed
+Time: O(n²)
+Space: O(n)
 """
 
 
