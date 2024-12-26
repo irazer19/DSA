@@ -12,38 +12,63 @@ Another way it to delete one 'b' and one 'c' resulting in the good string "aaabb
 """
 
 
-def minDeletions(s: str) -> int:
-	# Time: O(n * Freq) and space: O(n), where n is the total chars, and Freq is the max freq value.
-	"""
-	Logic:
-	First we compute the frequency of all the characters in the string, and then loop over the frequencies, and
-	check whether its present in the seen hash table or not. If no, then add it. If yes, then subtract the
-	frequency by 1 and check again until frequency becomes 0.
-	As we move forward, we will keep updating the seen hash table with the unique frequency of the characters.
-	Also, while decreasing the frequency count, we will increase the min deletion count for the result.
-	"""
-	# Stores all the frequencies of the characters in the string
-	freq = {}
-	for c in s:
-		if c not in freq:
-			freq[c] = 0
-		freq[c] += 1
-	# Seen hash table
-	seen = {}
-	# Result to store min deletion
-	result = 0
-	# For each frequency
-	for f in list(freq.values()):
-		# If we have seen this frequency, then we will keep reducing it by 1 and check again.
-		while seen.get(f, 0) > 0:
-			f -= 1
-			# Increasing the result
-			result += 1
-		# Once out of the while loop, we will add the current unique frequency for this letter to the hash table only
-		# if the frequency > 0
-		if f > 0:
-			if f not in seen:
-				seen[f] = 0
-			seen[f] += 1
+def minDeletions_bruteforce(s: str) -> int:
+    """
+    Keep a set of seen frequencies. For each character's frequency, keep decrementing it until we find an unused frequency (including 0), counting each decrement as a deletion.
+    Time Complexity: O(n·k) where n is the length of string and k is the maximum frequency of any character
+    Space Complexity: O(k) where k is the number of unique frequencies
+    """
+    freq = {}
+    for char in s:
+        freq[char] = freq.get(char, 0) + 1
 
-	return result
+    deletions = 0
+    seen_frequencies = set()
+
+    # For each character frequency
+    for char, count in freq.items():
+        current_count = count
+        # Keep reducing frequency until we find a unique one
+        while current_count > 0 and current_count in seen_frequencies:
+            current_count -= 1
+            deletions += 1
+        seen_frequencies.add(current_count)
+
+    return deletions
+
+
+def minDeletions_optimized(s: str) -> int:
+    """
+    Sort frequencies in descending order, then ensure each frequency is strictly less than the previous one by reducing it as needed.
+    The core idea is that for frequencies to be unique, when sorted in descending order, each number must be less than the previous
+    one (like 5,4,2,1). Any time this rule is violated, we must reduce numbers until the rule is satisfied.
+
+    Time: O(n + k²) where:
+    n is the length of input string (for counting frequencies)
+    k is the number of unique characters (k ≤ 26)
+    The k² comes from the nested while loops that may need to check previous frequencies
+
+    Space: O(1) since we're still using a fixed-size array (max 26 characters)
+    """
+    # Count frequencies
+    freq = [0] * 26
+    for char in s:
+        freq[ord(char) - ord("a")] += 1
+
+    # Sort frequencies in descending order and remove zeros
+    freq = sorted([f for f in freq if f > 0], reverse=True)
+
+    deletions = 0
+
+    # Process each frequency
+    for i in range(1, len(freq)):
+        # If current frequency needs to be reduced
+        while freq[i] >= freq[i - 1] and freq[i] > 0:
+            freq[i] -= 1
+            deletions += 1
+        # If we have equal frequencies greater than 0
+        while freq[i] > 0 and freq[i] in freq[:i]:
+            freq[i] -= 1
+            deletions += 1
+
+    return deletions

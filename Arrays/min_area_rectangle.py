@@ -9,6 +9,8 @@ The input array will never contain duplicate points.
 input = [[1, 5], [5, 1], [4, 2], [2, 4], [2, 2], [1, 2], [4, 5], [2, 5], [-1, -2]]
 expected = 3
 
+https://leetcode.com/problems/minimum-area-rectangle/description/
+
 """
 
 
@@ -24,21 +26,27 @@ def minimumAreaRectangle(points):
     # Storing the coordinates in a hastable
     getCoord = {tuple(c): True for c in points}
     # Result
-    minArea = float('inf')
+    minArea = float("inf")
     # For every coordinate, this is the bottom left coordinate of the rectangle
     for bottomLeftPoint in points:
         # For ever top right coordinate
         for topRightPoint in points:
             # If the top right coordinate is valid
-            if topRightPoint[0] > bottomLeftPoint[0] and topRightPoint[1] > bottomLeftPoint[1]:
+            if (
+                topRightPoint[0] > bottomLeftPoint[0]
+                and topRightPoint[1] > bottomLeftPoint[1]
+            ):
                 # Deriving the top left and bottom right coordinates
                 topLeftPoint = [bottomLeftPoint[0], topRightPoint[1]]
                 bottomRightPoint = [topRightPoint[0], bottomLeftPoint[1]]
                 # If both the derived coordinates are present in the hastable
-                if tuple(topLeftPoint) in getCoord and tuple(bottomRightPoint) in getCoord:
+                if (
+                    tuple(topLeftPoint) in getCoord
+                    and tuple(bottomRightPoint) in getCoord
+                ):
                     # Computing the X, Y of the rectangle
                     x = bottomRightPoint[0] - bottomLeftPoint[0]
                     y = topLeftPoint[1] - bottomLeftPoint[1]
                     # Updating the min area result.
                     minArea = min(minArea, x * y)
-    return minArea if minArea != float('inf') else 0
+    return minArea if minArea != float("inf") else 0
