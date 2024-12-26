@@ -9,6 +9,8 @@ Input: s = "aaabbbcc"
 Output: 2
 Explanation: You can delete two 'b's resulting in the good string "aaabcc".
 Another way it to delete one 'b' and one 'c' resulting in the good string "aaabbc".
+
+https://leetcode.com/problems/minimum-deletions-to-make-character-frequencies-unique/
 """
 
 
