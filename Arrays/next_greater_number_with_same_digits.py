@@ -19,18 +19,25 @@ Given an array of integers nums, find the next permutation of nums
 Input: nums = [1,2,3]
 Output: [1,3,2]
 
+https://leetcode.com/problems/next-permutation/description/
+
+Brute Foce:
+1. Generate all possible permutations
+2. Sort them lexicographically
+3. Find the current permutation in the sorted list
+4. Return the next one (or the first if we're at the end)
+Time = Space = O(n!)
+
+Optimized:
+Step 1: First we find the digit which is smaller than the immediate next digit.
+Step 2: Now we find the largest index digit which is immediate greater than the above found digit.
+Step 3: We swap the above two digits.
+Step 4: Now we reverse from everything from the swapped idx onwards.
+Time: O(n) and Space: O(1)
 """
 
 
 def findNext(nums):
-    # Time: O(n) and Space: O(1)
-    """
-    Logic:
-    Step 1: First we find the digit which is smaller than the immediate next digit.
-    Step 2: Now we find the largest index digit which is immediate greater than the above found digit.
-    Step 3: We swap the above two digits.
-    Step 4: Now we reverse from everything from the swapped idx onwards.
-    """
     n = len(nums)
     k = -1
 
