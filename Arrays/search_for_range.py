@@ -13,19 +13,26 @@ question's video! explanation before starting to code.
 array = [0, 1, 21, 33, 45, 45, 45, 45, 45, 45, 61, 71, 73], target = 45
 Output: [4, 9]
 
+https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/description/
+
+Brute force:
+Locate the target, and then use two pointers to expand left and right to get the range.
+Time: O(n) and Space: O(1)
+
+Optimized:
+Using Binary Search
+For a given target, we have to find the first occurrence and its last occurrence in the array.
+To find the first occurrence, we will do a binary search, where if we find the target, we will try moving to
+the left if possible to find the left most occurrence of it.
+Similarly, we will do it for the last occurrence, where we will try to move to the right if possible.
+Finally, we will return the output of left most occurrence and right most occurrence of the target.
+Time: O(logn) and Space: O(1)
 """
 
 
 def searchForRange(array, target):
     # Time: O(logn) and Space: O(1)
-    """
-    Logic:
-    For a given target, we have to find the first occurrence and its last occurrence in the array.
-    To find the first occurrence, we will do a binary search, where if we find the target, we will try moving to
-    the left if possible to find the left most occurrence of it.
-    Similarly, we will do it for the last occurrence, where we will try to move to the right if possible.
-    Finally, we will return the output of left most occurrence and right most occurrence of the target.
-    """
+
     # Finding the leftmost occurrence of the target.
     leftIdx = search(array, target, True)
     # Finding the rightmost occurrence of the target.
