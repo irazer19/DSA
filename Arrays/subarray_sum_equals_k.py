@@ -3,42 +3,40 @@ Given an array of integers nums and an integer k, return the total number of sub
 A subarray is a contiguous non-empty sequence of elements within an array.
 Input : arr[] = {10, 2, -2, -20, 10}, k = -10
 Output : 3
+
+https://leetcode.com/problems/subarray-sum-equals-k/description/
+
+Brute Force Solution:
+The brute force approach involves checking all possible subarrays and counting those with sum equal to k.
+Time Complexity: O(n²)
+Space Complexity: O(1)
+
+Optimized Solution:
+A prefix sum (also called cumulative sum) is a running total of numbers in an array from the beginning up to each position.
+If we have two prefix sums (cumulative sums) P1 and P2, and their difference (P2 - P1) equals k, then the subarray between these positions must sum to k.
+In other words:
+
+If currentSum - k exists in our hashmap, it means we found a subarray with sum k
+The value in hashmap tells us how many times we've seen that prefix sum before, which equals the number of valid subarrays ending at current position
+
+This turns "finding subarrays with sum k" into "finding pairs of prefix sums with difference k", making it O(n) with a hashmap lookup.
+Time = Space = O(n)
 """
 
 
-def subarraySum(nums, k) -> int:
-	# Time = Space = O(n)
-	"""
-	Logic:
-	We will maintain a hashtable which will store all the sums which we compute and its frequency.
-	We will loop over every number and add it the current sum, if the currentSum - target which is the remainder
-	present in the hashtable, then we will add the result by adding the frequency of the remainder, meaning that
-	if we have r remainders then we know that there are r subarrays which can add upto the target.
+def subarraySum_optimized(nums, k):
+    count = 0
+    curr_sum = 0
+    # Dictionary to store prefix sum frequencies
+    prefix_sum = {0: 1}  # Initialize with 0 sum having frequency 1
 
-	NOTE: If the question is asking to find the subarrays which are divided by the k, then we store the
-	remainder = currSum % k in the hash table.
-	"""
-	# Current sum
-	currSum = 0
-	# We always will have the sum=0 so we add it by default.
-	sumFrequency = {0: 1}
-	# Result
-	totalSubarrays = 0
-	# For each number
-	for n in nums:
-		# Adding it to the current sum
-		currSum += n
-		# Getting the remainder
-		remainder = currSum - k
-		# If the remainder is present in the hastable
-		if remainder in sumFrequency:
-			# Updating the result by the remainder's frequency
-			totalSubarrays += sumFrequency[remainder]
-		# If the current sum is already in the hashtable, then we update its frequency by 1.
-		if currSum in sumFrequency:
-			sumFrequency[currSum] += 1
-		else:
-			# Else we create a new key for the current sum
-			sumFrequency[currSum] = 1
+    for num in nums:
+        curr_sum += num
+        # If (curr_sum - k) exists in prefix_sum,
+        # it means we have found subarrays with sum k
+        if curr_sum - k in prefix_sum:
+            count += prefix_sum[curr_sum - k]
+        # Update prefix_sum frequency
+        prefix_sum[curr_sum] = prefix_sum.get(curr_sum, 0) + 1
 
-	return totalSubarrays
+    return count
