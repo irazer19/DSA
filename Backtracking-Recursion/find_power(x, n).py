@@ -1,21 +1,25 @@
 """
 Given x and n, find the power of x^n.
 
+https://leetcode.com/problems/powx-n/description/
+
+Brute force:
+Loop n times, and keep multiplying the result with x.
+Time: O(n) and Space: O(1)
+
+Optimized:
+The idea is to find the power of one half of the given n, and multiply the result with itself because
+the other half is symmetric.
+Ex: For 3^4, we have n = 4, here one half is 3^2 and other half is 3^2,
+now we will calculate the result for one half 3^2 = 9 and then multiply the result with itself,
+9 x 9 = 81, because the other half is symmetric.
+
+If n is odd, then we multiply the result with one more x.
+Time = Space = O(log(n))
 """
 
 
 def myPow(x: float, n: int) -> float:
-    # Time = Space = O(log(n))
-    """
-    Logic: The idea is to find the power of one half of the given n, and multiply the result with itself because
-    the other half is symmetric.
-    Ex: For 3^4, we have n = 4, here one half is 3^2 and other half is 3^2,
-    now we will calculate the result for one half 3^2 = 9 and then multiply the result with itself,
-    9 x 9 = 81, because the other half is symmetric.
-
-    If n is odd, then we multiply the result with one more x.
-
-    """
     # Handling the case where n is < 0.
     # Whether n is +ve or -ve, we first find the result using +ve n only.
     result = calculate(x, n if n > 0 else n * -1)
