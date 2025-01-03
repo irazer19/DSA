@@ -8,6 +8,8 @@ Output:
 ['<div><div><div></div></div></div>', '<div><div></div><div></div></div>', '<div><div></div></div><div></div>',
 '<div></div><div><div></div></div>', '<div></div><div></div><div></div>']
 
+https://leetcode.com/problems/generate-parentheses/description/
+
 Brute force:
 The idea is to generate all possible combinations of opening and closing div tags, then filter out invalid ones
 Time = Space = O(2^(2n))
