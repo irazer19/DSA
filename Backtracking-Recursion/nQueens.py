@@ -5,6 +5,8 @@ Return the total number of placements possible in the board.
 
 Input: n = 4
 Output: 2
+
+https://leetcode.com/problems/n-queens/description/
 """
 
 
