@@ -15,53 +15,37 @@ Explanation: All the valid concatenations are:
 - "uniq" ("un" + "iq")
 - "ique" ("iq" + "ue")
 Maximum length is 4.
+
+https://leetcode.com/problems/maximum-length-of-a-concatenated-string-with-unique-characters/description/
+
+Uses recursion with backtracking
+For each string in the array, we have two choices:
+
+Include it in our concatenation
+Skip it and move to the next string
+
+Time Complexity: O(2^n), where n is the length of input array
+Space Complexity: O(n) for the recursion stack
+
 """
 
 
-def maxLength(arr) -> int:
-	# Time: O(2^n) and Space: O(n + n*w)
-	"""
-	Logic:
-	We can either add the current word or the ignore it and move to the next index.
-	First call will be when we choose to add it, then we will add all the letter frequency to the hash table and
-	then move to the next index in function call.
-	Second, we will choose not to add it, then we will first remove all the frequency of the letters from the hash table
-	and then do the function call with the next index.
+def max_length(arr):
+    def is_valid(s):
+        # Check if string has all unique characters
+        return len(s) == len(set(s))
 
-	Now the base case is, if we have the frequency of any letters > 1 in the hash table, then we will return max length
-	as 0. And if the idx is out of bounds, then we will return the sum of the frequency of the letters in the hash table
+    def backtrack(index, current):
+        if index == len(arr):
+            # If current combination is valid, return its length
+            return len(current) if is_valid(current) else 0
 
-	"""
-	# Hash table
-	table = {}
-	return backtrack(arr, 0, 0, table)
+        # Don't include current string
+        length1 = backtrack(index + 1, current)
 
+        # Include current string
+        length2 = backtrack(index + 1, current + arr[index])
 
-def backtrack(arr, idx, currMax, table):
-	# If the frequency of any letters > 1 in the hash table, we return 0 as the max length
-	freq = list(table.values())
-	if freq and max(freq) > 1:
-		return 0
-	# IF we have reached the end of the index, we return the sum of the frequency of the letters in the hash table
-	if idx == len(arr):
-		return sum(list(table.values()))
-	# Current word
-	currWord = arr[idx]
-	# Adding the letter frequency in the hash table for the current word
-	updateCount(table, currWord, add=True)
-	# Calling with the next index
-	currMax = max(currMax, backtrack(arr, idx + 1, currMax, table))
-	# Removing the current words letters from the hash table.
-	updateCount(table, currWord, add=False)
-	# Calling the next index without adding the current word
-	currMax = max(currMax, backtrack(arr, idx + 1, currMax, table))
+        return max(length1, length2)
 
-	return currMax
-
-
-def updateCount(table, word, add=True):
-	for c in word:
-		if add:
-			table[c] = 1 + table.get(c, 0)
-		else:
-			table[c] -= 1
+    return backtrack(0, "")

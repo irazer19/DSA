@@ -62,7 +62,11 @@ def solve(node, reportOne, reportTwo):
 
     # Finally, we create and return the Result object:
     # If found_from_here is already 2, then we fill the node attribute else we store None.
-    return Result(found_from_here, node) if found_from_here == 2 else Result(found_from_here, None)
+    return (
+        Result(found_from_here, node)
+        if found_from_here == 2
+        else Result(found_from_here, None)
+    )
 
 
 class Result:
