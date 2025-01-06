@@ -9,11 +9,12 @@ Output:
  [1,2,1],
  [2,1,1]]
 
+https://leetcode.com/problems/permutations-ii/description/
 """
 
 
 def getPermutations(array):
-    # Time = Space = O(n*n!)
+    # Time = Space = O(n!)
     """
     Logic:
     We swap each element with every other element, and after the swap, we again call the function with the next

@@ -5,11 +5,13 @@ Input: [1, 2, 3]
 
 Output: [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 2, 1], [3, 1, 2]]
 
+https://leetcode.com/problems/permutations/description/
+
 """
 
 
 def getPermutations(array):
-    # Time = Space = O(n*n!)
+    # Time = Space = O(n!)
     """
     Logic:
     We swap each element with every other element, and after the swap, we again call the function with the next
