@@ -25,6 +25,7 @@ Output =
     [1, 2, 6, 5, 8, 7, 4, 9, 3]
     [3, 4, 9, 2, 1, 6, 8, 5, 7]
 
+https://leetcode.com/problems/valid-sudoku/description/
 """
 
 
