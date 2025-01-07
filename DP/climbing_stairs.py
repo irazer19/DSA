@@ -2,7 +2,37 @@
 You are climbing a staircase of height. It takes n steps to reach the top.
 Each time you can climb upto maxSteps steps. In how many distinct ways can you climb to the top?
 
+Input: height = 4, maxSteps = 3
+Output: 7
+
 """
+
+
+def climb_stairs_brute_force(height, max_steps):
+    """
+    Brute force recursive solution to find number of ways to climb stairs
+    Time Complexity: O(max_steps^height), because for every height we have maxSteps choices.
+    Space Complexity: O(height) - due to recursion stack
+
+    Args:
+        height (int): Total number of stairs
+        max_steps (int): Maximum steps that can be taken at once
+
+    Returns:
+        int: Number of distinct ways to climb stairs
+    """
+    # Base cases
+    if height == 0:
+        return 1
+    if height < 0:
+        return 0
+
+    # Try taking 1 to max_steps steps at current position
+    total_ways = 0
+    for steps in range(1, max_steps + 1):
+        total_ways += climb_stairs_brute_force(height - steps, max_steps)
+
+    return total_ways
 
 
 def staircaseTraversal(height, maxSteps):
