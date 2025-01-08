@@ -17,34 +17,70 @@ Given a string s containing only digits, return the number of ways to decode it.
 Input: s = "226"
 Output: 3
 Explanation: "226" could be decoded as "BZ" (2 26), "VF" (22 6), or "BBF" (2 2 6).
+
+https://leetcode.com/problems/decode-ways/
 """
 
 
-def numDecodings(s: str):
-	# Time = Space = O(n)
-	"""
-	Logic:
-	We start from the end of the string, if the current letter is between [1, 26] then we can use this letter
-	so the total ways for it becomes = result in i + 1.
-	Now we can also make the current i and i+1 letters as 2 digit and decode it, if we do so then the total ways =
-	current existing ways + result at i + 2
-	"""
-	# Initializing dp to store the result at every index
-	dp = [0 for _ in range(len(s) + 1)]
-	# The last index is dummy so we add 1.
-	dp[-1] = 1
-	# Starting from the end
-	for i in range(len(s) - 1, -1, -1):
-		# If the current letter is 0, we store 0 in the result
-		if s[i] == '0':
-			dp[i] = 0
-		else:
-			# Else, we consider a single digit for the current letter and therefor store the result of i + 1
-			dp[i] = dp[i + 1]
-			# Now we also consider 2 digit number for decode.
-			# If the index is in bound, and the first digit = 1, then we are okay to have 10..to 19.
-			# If the first digit is 2, then we want the second digit to be between [0, 6]
-			if i + 2 < len(dp) and int(s[i]) == 1 or (int(s[i]) == 2 and i + 1 < len(s) and 0 <= int(s[i + 1]) <= 6):
-				# Also storing the i + 2 index result because we considered i and i + 1 as a 2 digit number
-				dp[i] += dp[i + 2]
-	return dp[0]
+def numDecodingsBruteForce(s: str) -> int:
+    """
+    Brute Force (Recursive):
+    Uses recursion to try all possible decodings
+    For each position, it tries to decode either 1 or 2 digits
+    Time Complexity: O(2ⁿ) - exponential, as it explores all possibilities
+    Space Complexity: O(n) due to recursion stack
+    """
+
+    def decode(index: int) -> int:
+        # Base cases
+        if index == len(s):  # Reached end of string
+            return 1
+
+        if s[index] == "0":  # Invalid leading zero
+            return 0
+
+        # Try single digit
+        ways = decode(index + 1)
+
+        # Try two digits if possible
+        if index + 1 < len(s):
+            value = int(s[index : index + 2])
+            if value <= 26:
+                ways += decode(index + 2)
+
+        return ways
+
+    return decode(0)
+
+
+def numDecodingsDP(s: str) -> int:
+    """
+    We use an array dp[] where dp[i] represents the number of ways to decode the string up to position i. At each position:
+        If current digit isn't '0', add dp[i-1] (ways using 1 digit)
+        If last two digits form 10-26, add dp[i-2] (ways using 2 digits)
+        dp[i] will be sum of both possibilities
+
+    Uses a bottom-up approach with tabulation
+    Stores intermediate results in a DP array
+    Time Complexity: O(n)
+    Space Complexity: O(n)
+    """
+    if not s or s[0] == "0":
+        return 0
+
+    n = len(s)
+    dp = [0] * (n + 1)
+    dp[0] = 1  # Empty string
+    dp[1] = 1  # First character
+
+    for i in range(2, n + 1):
+        # Check if single digit decode is possible
+        if s[i - 1] != "0":
+            dp[i] += dp[i - 1]
+
+        # Check if two-digit decode is possible
+        two_digit = int(s[i - 2 : i])
+        if 10 <= two_digit <= 26:
+            dp[i] += dp[i - 2]
+
+    return dp[n]
