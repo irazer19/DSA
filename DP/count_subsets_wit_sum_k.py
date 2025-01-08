@@ -3,6 +3,29 @@ Given an array arr[] of length N and an integer k, the task is to find the numbe
 """
 
 
+def brute_force(arr, k):
+    # Time = O(2^n), Space = O(n)
+    # We try with every element and add to the current sum and move to the next index using recursion.
+    res = Res()
+
+    def solve(arr, k, idx, total, res):
+        if k == total:
+            res.res += 1
+            return
+        for i in range(idx, len(arr)):
+            if total + arr[i] > k:
+                continue
+            solve(arr, k, i + 1, total + arr[i], res)
+
+    solve(arr, k, 0, 0, res)
+    return res.res
+
+
+class Res:
+    def __init__(self):
+        self.res = 0
+
+
 def CountSubsets(arr, k):
     # Time = Space = O(n x k)
     # Using DP, creating a matrix of size n x k
@@ -26,4 +49,4 @@ def CountSubsets(arr, k):
     return store[-1][-1]
 
 
-print(CountSubsets([1, 2, 3, 3], 6))
+print(brute_force([1, 2, 3, 3], 6))
