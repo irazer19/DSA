@@ -13,7 +13,44 @@ rabbbit
 rabbbit
 rabbbit
 
+https://leetcode.com/problems/distinct-subsequences/
 """
+
+
+# Brute force
+def numDistinct_brute(s: str, t: str) -> int:
+    """Brute Force Solution (Time: O(2^n), Space: O(n) for recursion stack)
+
+    Uses recursive backtracking to try all possible combinations
+    At each position in string s, we have two choices:
+
+    If current characters match, we can include it in our subsequence
+    We can always skip the current character
+
+    Base cases:
+    If we've matched all characters in t, we've found a valid subsequence
+    If we've exhausted s without matching t, we return 0"""
+
+    def backtrack(s_idx: int, t_idx: int) -> int:
+        # Base cases
+        if t_idx == len(t):  # Found a valid subsequence
+            return 1
+        if s_idx == len(s):  # Reached end of s without finding subsequence
+            return 0
+
+        count = 0
+        # If current characters match, we have two choices:
+        # 1. Include current character
+        # 2. Skip current character
+        if s[s_idx] == t[t_idx]:
+            count += backtrack(s_idx + 1, t_idx + 1)  # Include current char
+
+        # Always try skipping current character in s
+        count += backtrack(s_idx + 1, t_idx)
+
+        return count
+
+    return backtrack(0, 0)
 
 
 def num_distinct(s: str, t: str) -> int:

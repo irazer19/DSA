@@ -28,7 +28,7 @@ def deleteAndEarnBruteForce(nums):
                 Remove the current number and its adjacent numbers (num-1 and num+1)
                 Recursively calculate points for remaining numbers
                 Keep track of maximum points possible
-    Time Complexity: O(2^n) where n is the length of nums
+    Time Complexity: O(2^n) where n is the length of nums, because each number has two choices, take it or leave it.
     Space Complexity: O(n) due to recursion stack
     """
 
