@@ -13,49 +13,90 @@ Explanation: You can perform the following operations:
 - Delete a 3 again to earn 3 points. nums = [3].
 - Delete a 3 once more to earn 3 points. nums = [].
 You earn a total of 9 points.
+
+https://leetcode.com/problems/delete-and-earn/description/
+
 """
 from collections import Counter
 
 
-def deleteAndEarn(nums):
-	# Time = Space = O(n)
-	"""
-	Logic:
-	At every index, we will compute the max points we can collect till that index.
-	So, first we will sort the array and also get the frequency count of the elements to handle the constraints
-	easily.
-	Once the array is sorted, if the num[i] - 1 = num[i - 1], then we know that we cannot include the result of
-	the previous element, so we add the result of the previous to previous element which is at index i - 2 because
-	it will surely not have the value val = num - 1 as we have sorted the array and removed duplicate elements.
-	Therefore, we can generalize this by just maintaining two variables, earn1 and earn2 to track the result of the
-	previous two elements.
-	"""
-	if not nums:
-		return 0
+def deleteAndEarnBruteForce(nums):
+    """
+    Brute Force Solution using recursion
+    For each number, we:
+                Calculate points by multiplying the number with its frequency
+                Remove the current number and its adjacent numbers (num-1 and num+1)
+                Recursively calculate points for remaining numbers
+                Keep track of maximum points possible
+    Time Complexity: O(2^n) where n is the length of nums
+    Space Complexity: O(n) due to recursion stack
+    """
 
-	# Getting the frequency count of the elements
-	count = Counter(nums)
-	# Removing duplicate elements and sorting
-	nums = sorted(list(set(nums)))
-	# stores the result of the previous two elements.
-	earn1, earn2 = 0, 0
-	# For each element
-	for i in range(len(nums)):
-		# Getting the total points by selecting the current element
-		currPoints = nums[i] * count[nums[i]]
-		# Now if the i - 1 element is one less than the current element, then we cannot add its result
-		if i > 0 and nums[i] - 1 == nums[i - 1]:
-			# cannot include earn2, so we either include the current element and add earn1 result(i-2 element) or
-			# dont include the current element and use the previous element fully.
-			currPoints = max(earn2, currPoints + earn1)
-			# Updating the earn1 and earn2
-			earn1 = earn2
-			earn2 = currPoints
-		else:
-			# Here we are sure that we can use the earn2 result(i-1), and also we dont need to use the max function
-			# because we know that the previous(earn2) is maximum always.
-			# Updating the current points and earn1, and earn2.
-			currPoints = currPoints + earn2
-			earn1 = earn2
-			earn2 = currPoints
-	return earn2
+    def recursiveEarn(numbers: Counter) -> int:
+        if not numbers:  # Base case: no numbers left
+            return 0
+
+        max_points = 0
+        # Try each unique number
+        for num in numbers.keys():
+            # Calculate points for current number
+            points = num * numbers[num]
+
+            # Create new counter without num-1, num, num+1
+            next_numbers = Counter(numbers)
+            del next_numbers[num]
+            if num - 1 in next_numbers:
+                del next_numbers[num - 1]
+            if num + 1 in next_numbers:
+                del next_numbers[num + 1]
+
+            # Recursive call for remaining numbers
+            points += recursiveEarn(next_numbers)
+            max_points = max(max_points, points)
+
+        return max_points
+
+    return recursiveEarn(Counter(nums))
+
+
+def deleteAndEarnOptimized(nums) -> int:
+    """
+    Optimized Solution using dynamic programming
+    Converts the problem into a form similar to House Robber problem
+    Key insights:
+
+    We can group same numbers together (using Counter)
+    For each number i, we have two choices:
+
+    Take number i: Get points from i and skip i-1
+    Skip number i: Keep points from i-1
+
+    Uses dynamic programming array where dp[i] represents max points up to number i
+    Time Complexity: O(n + k) where k is the range of numbers
+    Space Complexity: O(k)
+
+        Time Complexity: O(n + k) where n is length of nums and k is range of nums
+        Space Complexity: O(k) where k is range of nums
+    """
+    if not nums:
+        return 0
+
+    # Count frequency of each number
+    count = Counter(nums)
+    max_num = max(nums)
+
+    # dp[i] represents max points that can be earned up to number i
+    dp = [0] * (max_num + 1)
+
+    # Base cases
+    dp[0] = 0
+    dp[1] = count[1] * 1 if 1 in count else 0
+
+    # For each number, we can either:
+    # 1. Take current number (skip previous) -> dp[i-2] + current_points
+    # 2. Skip current number -> dp[i-1]
+    for i in range(2, max_num + 1):
+        current_points = count[i] * i
+        dp[i] = max(dp[i - 1], dp[i - 2] + current_points)
+
+    return dp[max_num]
