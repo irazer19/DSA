@@ -4,7 +4,53 @@ Given a string s, find the longest palindromic subsequence's length in s.
 A subsequence is a sequence that can be derived from another sequence by deleting some or no elements without
 changing the order of the remaining elements.
 
+https://leetcode.com/problems/longest-palindromic-subsequence/
+
+Example 1:
+
+Input: s = "bbbab"
+Output: 4
+Explanation: One possible longest palindromic subsequence is "bbbb".
+
+
 """
+
+
+def brute_force(s: str) -> int:
+    """
+    Time Complexity: O(2^n * n), where n is the length of the string
+    Space Complexity: O(2^n)
+    Approach:
+
+    Generate all possible subsequences of the string
+    Check each subsequence if it's a palindrome
+    Keep track of the maximum length palindromic subsequence
+
+    """
+
+    def is_palindrome(sub: str) -> bool:
+        return sub == sub[::-1]
+
+    def generate_subsequences(s: str) -> list[str]:
+        if not s:
+            return [""]
+
+        # Get all subsequences without the first character
+        subsequences = generate_subsequences(s[1:])
+
+        # Add the first character to all existing subsequences
+        return subsequences + [s[0] + sub for sub in subsequences]
+
+    # Generate all possible subsequences
+    subsequences = generate_subsequences(s)
+
+    # Find the longest palindromic subsequence
+    max_length = 0
+    for sub in subsequences:
+        if is_palindrome(sub) and len(sub) > max_length:
+            max_length = len(sub)
+
+    return max_length
 
 
 def longestPalindromicSubsequence(string):
