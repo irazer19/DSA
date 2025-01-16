@@ -23,7 +23,7 @@ def numberOfBinaryTreeTopologies(n):
     Finally, we add the result to the cache for the current n.
 
     """
-    # For n=0, we have total topologies = 1.
+    # For n=0, we have total topologies = 1
     cache = {0: 1}
 
     # Using bottom up approach, we start from 1 because we already have the result for 0 in the cache.

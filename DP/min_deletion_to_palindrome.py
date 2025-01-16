@@ -3,6 +3,8 @@ Given a string of size ‘n’. The task is to remove or delete the minimum numb
 the resultant string is a palindrome.
 
 Note: The order of characters should be maintained.
+
+https://leetcode.com/problems/minimum-number-of-moves-to-make-palindrome/
 """
 
 

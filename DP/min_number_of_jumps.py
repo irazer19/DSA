@@ -4,7 +4,56 @@ Each element in the array represents your maximum jump length at that position.
 Your goal is to reach the last index in the minimum number of jumps.
 You can assume that you can always reach the last index.
 
+https://leetcode.com/problems/jump-game-ii/description/
+
 """
+
+
+def brute_force(nums):
+    """The solution uses recursion with memoization to try all possible jumps at each position.
+        For each position, we:
+
+        Try every possible jump length from 1 up to the maximum jump length allowed at that position
+        For each jump, recursively calculate the minimum number of jumps needed from the new position
+        Take the minimum of all possible paths
+        Time Complexity: O(n*k) where n is array length and k is the maximum jump value
+    Space Complexity: O(n) for memoization
+    """
+    n = len(nums)
+    if n <= 1:
+        return 0
+
+    def findMinJumps(pos, memo=None):
+        if memo is None:
+            memo = {}
+
+        # If we've already calculated this position, return the memoized result
+        if pos in memo:
+            return memo[pos]
+
+        # If we've reached or passed the last index, return 0
+        if pos >= n - 1:
+            return 0
+
+        # If we can't jump from current position
+        if nums[pos] == 0:
+            return float("inf")
+
+        min_jumps = float("inf")
+        # Try all possible jumps from current position
+        for jump in range(1, nums[pos] + 1):
+            next_pos = pos + jump
+            if next_pos <= n:
+                jumps = findMinJumps(next_pos, memo)
+                if jumps != float("inf"):
+                    min_jumps = min(min_jumps, 1 + jumps)
+
+        # Memoize and return result
+        memo[pos] = min_jumps
+        return min_jumps
+
+    result = findMinJumps(0)
+    return result if result != float("inf") else -1
 
 
 def minNumberOfJumps(array):
