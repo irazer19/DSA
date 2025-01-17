@@ -6,7 +6,59 @@ Input: s = "aab"
 Output: 1
 Explanation: The palindrome partitioning ["aa","b"] could be produced using 1 cut.
 
+https://leetcode.com/problems/palindrome-partitioning/description/
 """
+
+
+def brute_force(s):
+    """is_palindrome(s, start, end): Checks if the substring from start to end is a palindrome.
+    min_cut(s): Main function that initializes the recursive helper function.
+    min_cut_helper(s, start, n, memo):
+
+    Takes current starting position, length of string, and memoization dictionary
+    Base case: if start >= n, return -1 (we subtract 1 because we'll add 1 for the cut)
+    If remaining string is palindrome, return 0 (no cuts needed)
+    For each possible cut position i:
+
+    If substring from start to i is palindrome
+    Recursively solve for remaining string (i+1 to end)
+    Take minimum of all possible cuts"""
+
+    def is_palindrome(s, start, end):
+        while start < end:
+            if s[start] != s[end]:
+                return False
+            start += 1
+            end -= 1
+        return True
+
+    def min_cut_helper(s, start, n, memo):
+        # Base cases
+        if start >= n:
+            return -1  # -1 because we'll add 1 for the cut
+
+        if start in memo:
+            return memo[start]
+
+        # If remaining string is palindrome, no cuts needed
+        if is_palindrome(s, start, n - 1):
+            return 0
+
+        min_cuts = float("inf")
+        # Try every possible cut position
+        for i in range(start, n):
+            # If substring from start to i is palindrome
+            if is_palindrome(s, start, i):
+                # Recursively solve for remaining string
+                cuts = 1 + min_cut_helper(s, i + 1, n, memo)
+                min_cuts = min(min_cuts, cuts)
+
+        memo[start] = min_cuts
+        return min_cuts
+
+    n = len(s)
+    memo = {}  # Memoization dictionary
+    return min_cut_helper(s, 0, n, memo)
 
 
 def palindromePartitioningMinCuts(string):
@@ -36,7 +88,7 @@ def palindromePartitioningMinCuts(string):
 
     # Second step: We will use DP to store all the minimum cuts required till index i.
     # Since we want to minimize, we will initialize with infinity.
-    min_cuts = [float('inf') for _ in string]
+    min_cuts = [float("inf") for _ in string]
     # For every letter in the string
     for i in range(len(string)):
         # If the string from 0 to i is a palindrome then we dont need to cut at all, so we store 0.
@@ -58,4 +110,4 @@ def palindromePartitioningMinCuts(string):
     return min_cuts[-1]
 
 
-print(palindromePartitioningMinCuts('noonabbad'))
+print(palindromePartitioningMinCuts("noonabbad"))
