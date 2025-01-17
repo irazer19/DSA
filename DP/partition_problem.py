@@ -1,7 +1,51 @@
 """
 Given a non-empty array nums containing only positive integers, find if the array can be
 partitioned into two subsets such that the sum of elements in both subsets is equal.
+
+Example 1:
+
+Input: nums = [1,5,11,5]
+Output: true
+Explanation: The array can be partitioned as [1, 5, 5] and [11].
+
+https://leetcode.com/problems/partition-equal-subset-sum/description/
 """
+
+
+def canPartition_bruteforce(nums):
+    """
+    Brute force solution using recursive backtracking
+    Time Complexity: O(2^n) where n is the length of nums
+    Space Complexity: O(n) due to recursion stack
+
+    If we add memoization, and cache [index, current_sum] = True/False, then we can save time to O(n * sum)
+    """
+    total_sum = sum(nums)
+
+    # If total sum is odd, we cannot partition into equal subsets
+    if total_sum % 2 != 0:
+        return False
+
+    target = total_sum // 2
+
+    def backtrack(index, current_sum):
+        # Base cases
+        if current_sum == target:
+            return True
+        if current_sum > target or index >= len(nums):
+            return False
+
+        # Try including the current number
+        if backtrack(index + 1, current_sum + nums[index]):
+            return True
+
+        # Try excluding the current number
+        if backtrack(index + 1, current_sum):
+            return True
+
+        return False
+
+    return backtrack(0, 0)
 
 
 def partition(arr):
