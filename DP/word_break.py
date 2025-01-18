@@ -4,7 +4,47 @@ sequence of one or more dictionary words.
 
 Note that the same word in the dictionary may be reused multiple times in the segmentation.
 
+Input: s = "leetcode", wordDict = ["leet","code"]
+Output: true
+Explanation: Return true because "leetcode" can be segmented as "leet code".
+
+https://leetcode.com/problems/word-break/description/
+
 """
+
+
+def brute_force(s: str, wordDict: list[str]) -> bool:
+    """
+    Determines if a string can be segmented into words from the dictionary using brute force.
+
+    Args:
+        s: The input string to be segmented
+        wordDict: List of dictionary words
+
+    Returns:
+        bool: True if string can be segmented, False otherwise
+
+    Time Complexity: O(2^n) where n is the length of string
+    Space Complexity: O(n) due to recursion stack
+    """
+
+    def backtrack(start: int) -> bool:
+        # Base case: if we've reached the end of the string
+        if start == len(s):
+            return True
+
+        # Try all possible prefixes from current position
+        for end in range(start + 1, len(s) + 1):
+            # Get current prefix
+            prefix = s[start:end]
+
+            # If prefix is in dictionary and rest of string can be segmented
+            if prefix in wordDict and backtrack(end):
+                return True
+
+        return False
+
+    return backtrack(0)
 
 
 def wordBreak(s: str, wordDict) -> bool:
@@ -24,7 +64,7 @@ def wordBreak(s: str, wordDict) -> bool:
                 # Now we slice the string starting from index i to the current word length and match the word.
                 # If the word matches and also if the next word was also present, only then we add True for the current
                 # word.
-                if s[i: i + len(word)] == word and store[i + len(word)] is True:
+                if s[i : i + len(word)] == word and store[i + len(word)] is True:
                     store[i] = True
                     break  # We break because there is no need to check for another word.
                 # Else: the store[i] will remain False.
@@ -32,4 +72,4 @@ def wordBreak(s: str, wordDict) -> bool:
     return store[0]
 
 
-print(wordBreak('leetcode', ['leet', 'code']))
+print(wordBreak("leetcode", ["leet", "code"]))

@@ -5,6 +5,12 @@ Given an input string (s) and a pattern (p), implement wildcard pattern matching
 '*' Matches any sequence of characters (including the empty sequence).
 The matching should cover the entire input string (not partial).
 
+Input: s = "aa", p = "a"
+Output: false
+Explanation: "a" does not match the entire string "aa".
+
+https://leetcode.com/problems/wildcard-matching/description/
+
 """
 
 
@@ -21,18 +27,18 @@ def wildcard(s, p):
     # Logic: For *, If any of the previous diagonal cell, left cell or top cell is True, then we store True in the
     # current cell because it does not matter as the * captures everything including empty chars.
     for j in range(1, len(store[0])):
-        if p[j - 1] == '*':
+        if p[j - 1] == "*":
             store[0][j] = store[0][j - 1]
 
     # Filling the rest of the matrix
     for i in range(1, len(store)):
         for j in range(1, len(store[0])):
             # Case if the wildcard is *, as same reason as discussed above.
-            if p[j - 1] == '*':
+            if p[j - 1] == "*":
                 store[i][j] = store[i - 1][j] or store[i][j - 1] or store[i - 1][j - 1]
             # If the wildcard is ?, then the current char surely matches, now if the previous diagonal cell is True
             # only then we store True. Same explanation goes if the match happens with wildcard letter [a-z].
-            elif p[j - 1] == '?' or p[j - 1] == s[i - 1]:
+            elif p[j - 1] == "?" or p[j - 1] == s[i - 1]:
                 store[i][j] = store[i - 1][j - 1]
 
     return store[-1][-1]
