@@ -14,6 +14,8 @@ Input: accounts = [["John","johnsmith@mail.com","john_newyork@mail.com"],["John"
 Output: [["John","john00@mail.com","john_newyork@mail.com","johnsmith@mail.com"],["Mary","mary@mail.com"],
 ["John","johnnybravo@mail.com"]]
 
+https://leetcode.com/problems/accounts-merge/description/
+
 Explanation:
 The first and second John's are the same person as they have the common email "johnsmith@mail.com".
 The third John and Mary are different people as none of their email addresses are used by other accounts.

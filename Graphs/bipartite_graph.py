@@ -5,7 +5,39 @@ A Bipartite graph is one in which we can color the nodes such that the adjacent 
 Input: [[1,2,3],[0,2],[0,1,3],[0,2]]
 Output: False
 
+https://leetcode.com/problems/is-graph-bipartite/description/
 """
+
+
+# Brute Force Solution using Backtracking
+def bruteF_force(graph):
+    """Time Complexity: O(2^N), For each node, we try 2 colors
+    Space Complexity: O(N)"""
+    n = len(graph)
+    colors = [-1] * n  # -1 represents uncolored
+
+    def isValidColoring(node, color):
+        # Check if any adjacent node has the same color
+        for neighbor in graph[node]:
+            if colors[neighbor] == color:
+                return False
+        return True
+
+    def backtrack(node):
+        if node == n:
+            return True
+
+        # Try both colors (0 and 1) for current node
+        for color in [0, 1]:
+            if isValidColoring(node, color):
+                colors[node] = color
+                if backtrack(node + 1):
+                    return True
+                colors[node] = -1  # backtrack
+
+        return False
+
+    return backtrack(0)
 
 
 def isBipartite(arr):
